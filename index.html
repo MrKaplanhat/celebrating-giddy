@@ -1,0 +1,1326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#f5f0e9" />
+  <meta name="description" content="To know you, to love you. A birthday archive." />
+  <title>To Know You, To Love You.</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --bg: #f5f0e9;
+      --card: #faf7f2;
+      --text: #261a1e;
+      --muted: #76686b;
+      --primary: #642d3b;
+      --primary-soft: #ead3d8;
+      --accent: #a86777;
+      --border: #d9ced0;
+      --dark: #21161a;
+      --white: #fffaf6;
+    }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Inter, sans-serif;
+      font-size: 15px;
+      line-height: 1.6;
+    }
+
+    body.menu-open { overflow: hidden; }
+
+    a { color: inherit; text-decoration: none; }
+
+    button, input, textarea { font: inherit; }
+
+    button { cursor: pointer; }
+
+    img {
+      display: block;
+      max-width: 100%;
+    }
+
+    h1, h2, h3 {
+      margin: 0;
+      font-family: Fraunces, serif;
+      font-weight: 500;
+      letter-spacing: -0.02em;
+    }
+
+    .eyebrow {
+      display: block;
+      margin-bottom: 16px;
+      color: var(--accent);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+    }
+
+    .hairline {
+      border-top: 1px solid var(--border);
+    }
+
+    /* Desktop sidebar */
+    .site-shell {
+      min-height: 100vh;
+    }
+
+    .sidebar {
+      position: fixed;
+      inset: 0 auto 0 0;
+      z-index: 100;
+      width: 220px;
+      padding: 36px 28px;
+      background: var(--bg);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .brand {
+      margin-bottom: 40px;
+      font-family: Fraunces, serif;
+      font-size: 20px;
+      font-style: italic;
+      line-height: 1.2;
+    }
+
+    .nav {
+      display: grid;
+      gap: 2px;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .nav a {
+      display: block;
+      padding: 10px 4px;
+      color: rgba(38,26,30,.58);
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      transition: color .2s ease;
+    }
+
+    .nav a:hover,
+    .nav a.active {
+      color: var(--primary);
+    }
+
+    .sidebar-note {
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.7;
+    }
+
+    main {
+      margin-left: 220px;
+    }
+
+    .mobile-header {
+      display: none;
+    }
+
+    /* Generic section */
+    .section {
+      width: min(1100px, calc(100% - 48px));
+      margin: 0 auto;
+      padding: 100px 0;
+    }
+
+    .section-header {
+      max-width: 650px;
+      margin-bottom: 48px;
+    }
+
+    .section-header h2 {
+      margin-bottom: 14px;
+      font-size: clamp(40px, 5vw, 58px);
+      line-height: 1.05;
+    }
+
+    .section-header p {
+      max-width: 520px;
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.75;
+    }
+
+    /* Hero */
+    .hero {
+      position: relative;
+      min-height: 88vh;
+      overflow: hidden;
+      display: flex;
+      align-items: flex-end;
+      background: var(--dark);
+    }
+
+    .hero-image {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: .92;
+    }
+
+    .hero-overlay {
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(to top, rgba(24,13,17,.9), rgba(24,13,17,.12) 65%, rgba(24,13,17,.08));
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      width: min(900px, calc(100% - 48px));
+      margin: 0 auto;
+      padding: 80px 0 88px;
+      color: white;
+      opacity: 0;
+      transform: translateY(18px);
+      animation: reveal 1s .15s forwards ease;
+    }
+
+    .hero-content .eyebrow {
+      color: var(--primary-soft);
+    }
+
+    .hero h1 {
+      max-width: 780px;
+      font-size: clamp(52px, 8vw, 92px);
+      line-height: .98;
+      font-style: italic;
+    }
+
+    .hero-meta {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      margin-top: 28px;
+      color: rgba(255,250,246,.72);
+      font-size: 11px;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+
+    .archive-stamp {
+      display: inline-flex;
+      width: 56px;
+      height: 56px;
+      flex: 0 0 auto;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid rgba(255,255,255,.45);
+      border-radius: 50%;
+      font-family: Fraunces, serif;
+      font-size: 13px;
+      font-style: italic;
+    }
+
+    /* Intro */
+    .intro {
+      display: grid;
+      grid-template-columns: 1fr 1.4fr;
+      gap: 80px;
+      align-items: start;
+    }
+
+    .intro h2 {
+      font-size: clamp(36px, 5vw, 54px);
+      line-height: 1.05;
+    }
+
+    .intro-copy {
+      max-width: 620px;
+      color: #514447;
+      font-size: 17px;
+      line-height: 1.9;
+    }
+
+    .intro-copy p { margin: 0 0 18px; }
+
+    /* Memories */
+    .memory-list {
+      border-top: 1px solid var(--border);
+    }
+
+    .memory {
+      display: grid;
+      grid-template-columns: 130px 1fr 300px;
+      gap: 40px;
+      padding: 34px 0;
+      border-bottom: 1px solid var(--border);
+      align-items: start;
+    }
+
+    .memory-date {
+      color: var(--accent);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+
+    .memory h3 {
+      margin-bottom: 10px;
+      font-size: 28px;
+    }
+
+    .memory p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .memory img {
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      object-fit: cover;
+    }
+
+    /* Gallery */
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 16px;
+    }
+
+    .gallery-item {
+      position: relative;
+      overflow: hidden;
+      background: #e9e1da;
+    }
+
+    .gallery-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform .7s ease;
+    }
+
+    .gallery-item:hover img { transform: scale(1.03); }
+
+    .gallery-item.large {
+      grid-column: span 4;
+      aspect-ratio: 4 / 3;
+    }
+
+    .gallery-item.wide {
+      grid-column: span 4;
+      aspect-ratio: 16 / 9;
+    }
+
+    .gallery-item.tall {
+      grid-column: span 2;
+      aspect-ratio: 3 / 4;
+    }
+
+    .gallery-item.normal {
+      grid-column: span 2;
+      aspect-ratio: 1;
+    }
+
+    .gallery-caption {
+      position: absolute;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      padding: 35px 16px 14px;
+      color: white;
+      background: linear-gradient(to top, rgba(20,8,12,.6), transparent);
+      font-size: 12px;
+      opacity: 0;
+      transition: opacity .3s ease;
+    }
+
+    .gallery-item:hover .gallery-caption { opacity: 1; }
+
+    /* Videos */
+    .video-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 32px;
+    }
+
+    .video-card {
+      overflow: hidden;
+      background: var(--card);
+      border: 1px solid var(--border);
+    }
+
+    .video-frame {
+      aspect-ratio: 16 / 9;
+      background: #21161a;
+    }
+
+    .video-frame iframe,
+    .video-frame video {
+      width: 100%;
+      height: 100%;
+      border: 0;
+      object-fit: cover;
+    }
+
+    .video-info {
+      padding: 20px;
+    }
+
+    .video-info h3 {
+      margin-bottom: 3px;
+      font-size: 22px;
+    }
+
+    .video-info span {
+      color: var(--accent);
+      font-size: 10px;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+    }
+
+    .video-info p {
+      margin: 12px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    /* Playlist */
+    .playlist {
+      border-top: 1px solid var(--border);
+    }
+
+    .track {
+      display: grid;
+      grid-template-columns: 48px 1fr auto;
+      gap: 20px;
+      align-items: center;
+      padding: 20px 4px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .track-number {
+      color: var(--accent);
+      font-size: 11px;
+      letter-spacing: .1em;
+    }
+
+    .track-title {
+      font-family: Fraunces, serif;
+      font-size: 21px;
+    }
+
+    .track-artist {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .track button {
+      width: 38px;
+      height: 38px;
+      border: 1px solid var(--border);
+      border-radius: 50%;
+      background: transparent;
+      color: var(--primary);
+    }
+
+    .player {
+      position: sticky;
+      bottom: 18px;
+      z-index: 20;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 20px;
+      align-items: center;
+      margin-top: 28px;
+      padding: 16px 18px;
+      background: rgba(250,247,242,.94);
+      border: 1px solid var(--border);
+      backdrop-filter: blur(12px);
+    }
+
+    .player-current {
+      font-family: Fraunces, serif;
+      font-size: 18px;
+    }
+
+    .player-current small {
+      display: block;
+      margin-top: 2px;
+      color: var(--muted);
+      font-family: Inter, sans-serif;
+      font-size: 11px;
+    }
+
+    .player-controls {
+      display: flex;
+      gap: 8px;
+    }
+
+    .player-controls button {
+      border: 0;
+      background: transparent;
+      color: var(--primary);
+      font-size: 12px;
+    }
+
+    /* Wishes */
+    .wishes-intro {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 30px;
+      align-items: end;
+      margin-bottom: 48px;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 44px;
+      padding: 0 18px;
+      border: 1px solid var(--primary);
+      background: var(--primary);
+      color: white;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      transition: background .2s ease, color .2s ease;
+    }
+
+    .button:hover {
+      background: transparent;
+      color: var(--primary);
+    }
+
+    .wishes-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+    }
+
+    .wish {
+      min-height: 190px;
+      padding: 28px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .wish-message {
+      margin: 0 0 28px;
+      font-family: Fraunces, serif;
+      font-size: 21px;
+      line-height: 1.45;
+    }
+
+    .wish-name {
+      color: var(--accent);
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+    }
+
+    .wish-status {
+      padding: 40px 0;
+      color: var(--muted);
+      text-align: center;
+      font-size: 13px;
+    }
+
+    /* Footer */
+    footer {
+      width: min(1100px, calc(100% - 48px));
+      margin: 0 auto;
+      padding: 50px 0 70px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      color: var(--muted);
+      font-size: 11px;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    /* Lightbox */
+    .lightbox {
+      position: fixed;
+      inset: 0;
+      z-index: 500;
+      display: none;
+      place-items: center;
+      padding: 24px;
+      background: rgba(20,10,14,.94);
+    }
+
+    .lightbox.open { display: grid; }
+
+    .lightbox img {
+      max-width: min(1200px, 94vw);
+      max-height: 88vh;
+      object-fit: contain;
+    }
+
+    .lightbox-close {
+      position: absolute;
+      top: 20px;
+      right: 24px;
+      border: 0;
+      background: transparent;
+      color: white;
+      font-size: 28px;
+    }
+
+    /* Mobile nav */
+    .mobile-menu {
+      position: fixed;
+      inset: 0;
+      z-index: 300;
+      display: none;
+      padding: 90px 24px 30px;
+      background: var(--bg);
+    }
+
+    .mobile-menu.open { display: block; }
+
+    .mobile-menu nav {
+      display: grid;
+    }
+
+    .mobile-menu a {
+      padding: 16px 0;
+      border-bottom: 1px solid var(--border);
+      font-family: Fraunces, serif;
+      font-size: 30px;
+    }
+
+    .mobile-close {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      border: 0;
+      background: transparent;
+      color: var(--text);
+      font-size: 26px;
+    }
+
+    @keyframes reveal {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 900px) {
+      .sidebar { display: none; }
+
+      main { margin-left: 0; }
+
+      .mobile-header {
+        position: sticky;
+        top: 0;
+        z-index: 150;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 16px 20px;
+        background: rgba(245,240,233,.94);
+        border-bottom: 1px solid var(--border);
+        backdrop-filter: blur(12px);
+      }
+
+      .mobile-brand {
+        font-family: Fraunces, serif;
+        font-size: 16px;
+        font-style: italic;
+      }
+
+      .mobile-menu-button {
+        border: 0;
+        background: transparent;
+        color: var(--text);
+        font-size: 12px;
+        font-weight: 600;
+        letter-spacing: .12em;
+        text-transform: uppercase;
+      }
+
+      .intro,
+      .wishes-intro {
+        grid-template-columns: 1fr;
+        gap: 25px;
+      }
+
+      .memory {
+        grid-template-columns: 100px 1fr;
+        gap: 24px;
+      }
+
+      .memory img {
+        grid-column: 2;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .section {
+        width: min(100% - 40px, 1100px);
+        padding: 72px 0;
+      }
+
+      .hero {
+        min-height: 78vh;
+      }
+
+      .hero-content {
+        width: calc(100% - 40px);
+        padding-bottom: 60px;
+      }
+
+      .hero h1 {
+        font-size: clamp(48px, 15vw, 70px);
+      }
+
+      .hero-meta {
+        align-items: flex-start;
+      }
+
+      .gallery-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+      }
+
+      .gallery-item.large,
+      .gallery-item.wide,
+      .gallery-item.tall,
+      .gallery-item.normal {
+        grid-column: span 2;
+        aspect-ratio: 4 / 3;
+      }
+
+      .gallery-item:nth-child(3n) {
+        grid-column: span 1;
+        aspect-ratio: 1;
+      }
+
+      .gallery-caption {
+        opacity: 1;
+      }
+
+      .video-grid,
+      .wishes-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .memory {
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
+
+      .memory img {
+        grid-column: auto;
+        margin-top: 10px;
+      }
+
+      .track {
+        grid-template-columns: 32px 1fr auto;
+        gap: 12px;
+      }
+
+      .player {
+        grid-template-columns: 1fr;
+      }
+
+      footer {
+        width: calc(100% - 40px);
+        flex-direction: column;
+      }
+    }
+
+
+    /* Spotify embed */
+    .spotify-embed {
+      overflow: hidden;
+      border: 1px solid var(--border);
+      background: var(--card);
+    }
+
+    .spotify-embed iframe {
+      display: block;
+      width: 100%;
+      height: 560px;
+      border: 0;
+    }
+
+    .playlist-note {
+      margin: 18px 0 0;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .playlist-note a {
+      color: var(--primary);
+      border-bottom: 1px solid var(--primary-soft);
+    }
+
+    @media (max-width: 600px) {
+      .spotify-embed iframe { height: 480px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after {
+        animation-duration: .001ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .001ms !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="site-shell">
+
+    <!-- Desktop navigation -->
+    <aside class="sidebar">
+      <div>
+        <div class="brand">
+          <a href="#home">To know you,<br>to love you.</a>
+        </div>
+
+        <nav aria-label="Main navigation">
+          <ul class="nav">
+            <li><a href="#home" class="active">Home</a></li>
+            <li><a href="#memories">Memories</a></li>
+            <li><a href="#gallery">Gallery</a></li>
+            <li><a href="#videos">Videos</a></li>
+            <li><a href="#playlist">Playlist</a></li>
+            <li><a href="#wishes">Wishes</a></li>
+          </ul>
+        </nav>
+      </div>
+
+      <div class="sidebar-note">
+        A little archive<br>
+        made with love.
+      </div>
+    </aside>
+
+    <!-- Mobile navigation -->
+    <header class="mobile-header">
+      <a class="mobile-brand" href="#home">To know you, to love you.</a>
+      <button class="mobile-menu-button" id="menuOpen" type="button">Menu</button>
+    </header>
+
+    <div class="mobile-menu" id="mobileMenu" aria-hidden="true">
+      <button class="mobile-close" id="menuClose" type="button" aria-label="Close menu">×</button>
+      <nav>
+        <a href="#home">Home</a>
+        <a href="#memories">Memories</a>
+        <a href="#gallery">Gallery</a>
+        <a href="#videos">Videos</a>
+        <a href="#playlist">Playlist</a>
+        <a href="#wishes">Wishes</a>
+      </nav>
+    </div>
+
+    <main>
+
+      <!-- HERO -->
+      <section class="hero" id="home">
+        <!-- Replace with the actual hero image -->
+        <img
+          class="hero-image"
+          src="assets/images/hero.jpg"
+          alt="Portrait"
+          onerror="this.style.display='none';"
+        />
+        <div class="hero-overlay"></div>
+
+        <div class="hero-content">
+          <span class="eyebrow" id="heroEyebrow">A birthday archive</span>
+          <h1>To know you,<br>to love you.</h1>
+
+          <div class="hero-meta">
+            <span class="archive-stamp">Vol.<br>01</span>
+            <span>A collection of memories,<br>moments &amp; messages.</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- INTRO -->
+      <section class="section">
+        <div class="intro">
+          <div>
+            <span class="eyebrow">A little note</span>
+            <h2>For the person<br>behind the memories.</h2>
+          </div>
+
+          <div class="intro-copy">
+            <p>
+              This is a small collection of the things that make you,
+              you. The moments, people, songs, stories and little pieces
+              of life that deserve to be kept somewhere.
+            </p>
+            <p>
+              Scroll through. Stay a while. There is no particular order
+              to any of it.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- MEMORIES -->
+      <section class="section hairline" id="memories">
+        <div class="section-header">
+          <span class="eyebrow">Vol. 01</span>
+          <h2>Memories</h2>
+          <p>Stories, in no particular order.</p>
+        </div>
+
+        <div class="memory-list" id="memoryList"></div>
+      </section>
+
+      <!-- GALLERY -->
+      <section class="section" id="gallery">
+        <div class="section-header">
+          <span class="eyebrow">Vol. 02</span>
+          <h2>Gallery</h2>
+          <p>A photographic archive. Moments worth keeping.</p>
+        </div>
+
+        <div class="gallery-grid" id="galleryGrid"></div>
+      </section>
+
+      <!-- VIDEOS -->
+      <section class="section hairline" id="videos">
+        <div class="section-header">
+          <span class="eyebrow">Vol. 03</span>
+          <h2>Videos</h2>
+          <p>Video messages from the people who love you.</p>
+        </div>
+
+        <div class="video-grid" id="videoGrid"></div>
+      </section>
+
+      <!-- PLAYLIST -->
+      <section class="section" id="playlist">
+        <div class="section-header">
+          <span class="eyebrow">Vol. 04</span>
+          <h2>Playlist</h2>
+          <p>A soundtrack for this chapter.</p>
+        </div>
+
+        <div class="spotify-embed">
+          <iframe
+            id="spotifyEmbed"
+            src=""
+            title="Birthday playlist"
+            loading="lazy"
+            allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+            allowfullscreen
+          ></iframe>
+        </div>
+
+        <p class="playlist-note">
+          Fifteen songs, in order. Press play.
+          <a id="spotifyLink" href="#" target="_blank" rel="noopener noreferrer">Open in Spotify</a>
+        </p>
+      </section>
+
+      <!-- WISHES -->
+      <section class="section hairline" id="wishes">
+        <div class="wishes-intro">
+          <div class="section-header" style="margin-bottom:0">
+            <span class="eyebrow">Vol. 05 · Guestbook</span>
+            <h2>Wishes</h2>
+            <p>Words from the people who know and love you.</p>
+          </div>
+
+          <!-- Replace this URL with the actual Google Form URL -->
+          <a
+            class="button"
+            id="wishFormLink"
+            href="#"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Leave a wish
+          </a>
+        </div>
+
+        <div class="wishes-grid" id="wishesGrid">
+          <div class="wish-status">Loading wishes...</div>
+        </div>
+      </section>
+
+      <footer>
+        <span>Made with love.</span>
+        <span id="footerLine">·</span>
+      </footer>
+
+    </main>
+  </div>
+
+  <!-- Image lightbox -->
+  <div class="lightbox" id="lightbox" aria-hidden="true">
+    <button class="lightbox-close" id="lightboxClose" type="button" aria-label="Close image">×</button>
+    <img id="lightboxImage" src="" alt="">
+  </div>
+
+  <script>
+  /* ============================================================
+     EDIT EVERYTHING IN THIS BLOCK. Nothing below it needs touching.
+     ============================================================
+
+     IMAGES & VIDEOS
+     You can point at files two ways:
+
+     1. Google Drive  -> paste just the file ID, e.g. "1AbCdEf_xyz123"
+        (In Drive: right-click a file > Share > "Anyone with the link".
+         The ID is the long string in the link between /d/ and /view.)
+
+     2. A local file   -> "assets/images/photo-01.jpg"
+        (Put the file in an assets folder next to this index.html.)
+
+     Local files load faster and never break. Drive IDs are quicker to set up.
+     ============================================================ */
+
+  const CONFIG = {
+    name: "Giddy",          // his name as it should appear on the page
+    age: "",                 // e.g. "24" — leave "" to hide the age
+    year: "2026",            // shown in the footer
+
+    heroImage: "",           // Drive file ID or assets/images/hero.jpg
+
+    spotifyPlaylistId: "6qvlgTSNWmaBeNx7PBFWj3",
+
+    googleFormUrl: "",       // link people use to leave a wish
+
+    // Easiest way to show wishes, no server needed:
+    // Google Form > Responses > open in Sheets >
+    // File > Share > Publish to web > choose the sheet > CSV > copy the link.
+    wishesSheetCsvUrl: "",
+
+    wishesApi: ""            // optional: /api/wishes if you deploy a backend instead
+  };
+
+  const MEMORIES = [
+    {
+      date: "01.01.2024",
+      title: "The beginning",
+      text: "Write the story here. A few lines is plenty.",
+      image: ""
+    },
+    {
+      date: "14.06.2024",
+      title: "Somewhere along the way",
+      text: "The little moments usually become the ones we remember.",
+      image: ""
+    },
+    {
+      date: "22.12.2024",
+      title: "Another chapter",
+      text: "A story, a place, a person, or simply a really good day.",
+      image: ""
+    }
+  ];
+
+  // size: "large" | "wide" | "tall" | "normal"
+  const GALLERY = [
+    { image: "", caption: "A moment worth keeping",  size: "large"  },
+    { image: "", caption: "Somewhere along the way", size: "tall"   },
+    { image: "", caption: "One for the archive",     size: "normal" },
+    { image: "", caption: "A really good day",       size: "wide"   },
+    { image: "", caption: "Keep this one",           size: "tall"   },
+    { image: "", caption: "Another little moment",   size: "normal" }
+  ];
+
+  const VIDEOS = [
+    {
+      title: "A message for you",
+      from: "From someone who loves you",
+      note: "A little message, saved here for you.",
+      video: "",   // Drive file ID, or assets/videos/message-01.mp4
+      poster: ""   // optional still image for local videos
+    }
+  ];
+
+  /* ============================================================
+     RENDERING — no edits needed past this line.
+     ============================================================ */
+
+  const isPath = value => /^(https?:)?\/\//.test(value) || /^(\.{0,2}\/|assets\/)/.test(value);
+
+  function imageUrl(value) {
+    if (!value) return "";
+    return isPath(value) ? value : `https://drive.google.com/thumbnail?id=${value}&sz=w1600`;
+  }
+
+  function escapeHTML(value) {
+    return String(value ?? "")
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;")
+      .replaceAll("'", "&#039;");
+  }
+
+  /* ---------- Names, hero, footer, links ---------- */
+
+  const heroEyebrow = document.getElementById("heroEyebrow");
+  const footerLine = document.getElementById("footerLine");
+  const heroImage = document.querySelector(".hero-image");
+
+  heroEyebrow.textContent = CONFIG.age
+    ? `Celebrating ${CONFIG.name} at ${CONFIG.age}`
+    : `Celebrating ${CONFIG.name}`;
+
+  footerLine.textContent = `${CONFIG.name} · ${CONFIG.year}`;
+  document.title = `To Know You, To Love You · ${CONFIG.name}`;
+
+  if (CONFIG.heroImage) {
+    heroImage.src = imageUrl(CONFIG.heroImage);
+  } else {
+    heroImage.style.display = "none";
+  }
+
+  /* ---------- Memories ---------- */
+
+  document.getElementById("memoryList").innerHTML = MEMORIES.map(item => `
+    <article class="memory">
+      <div class="memory-date">${escapeHTML(item.date)}</div>
+      <div>
+        <h3>${escapeHTML(item.title)}</h3>
+        <p>${escapeHTML(item.text)}</p>
+      </div>
+      ${item.image
+        ? `<img src="${imageUrl(item.image)}" alt="${escapeHTML(item.title)}" loading="lazy" referrerpolicy="no-referrer">`
+        : `<span></span>`}
+    </article>
+  `).join("");
+
+  /* ---------- Gallery ---------- */
+
+  const galleryGrid = document.getElementById("galleryGrid");
+
+  galleryGrid.innerHTML = GALLERY.filter(item => item.image).map(item => `
+    <button class="gallery-item ${escapeHTML(item.size || "normal")}" type="button"
+            data-image="${imageUrl(item.image)}"
+            data-caption="${escapeHTML(item.caption || "")}">
+      <img src="${imageUrl(item.image)}" alt="${escapeHTML(item.caption || "Photograph")}" loading="lazy" referrerpolicy="no-referrer">
+      <span class="gallery-caption">${escapeHTML(item.caption || "")}</span>
+    </button>
+  `).join("");
+
+  /* ---------- Videos ---------- */
+
+  const videoGrid = document.getElementById("videoGrid");
+  const withVideo = VIDEOS.filter(item => item.video);
+
+  if (!withVideo.length) {
+    videoGrid.innerHTML = '<div class="wish-status">Video messages will appear here.</div>';
+  } else {
+    videoGrid.innerHTML = withVideo.map(item => {
+      const frame = isPath(item.video)
+        ? `<video controls preload="metadata"${item.poster ? ` poster="${imageUrl(item.poster)}"` : ""}>
+             <source src="${item.video}" type="video/mp4">
+           </video>`
+        : `<iframe src="https://drive.google.com/file/d/${escapeHTML(item.video)}/preview"
+                   allow="autoplay; fullscreen" allowfullscreen loading="lazy"></iframe>`;
+
+      return `
+        <article class="video-card">
+          <div class="video-frame">${frame}</div>
+          <div class="video-info">
+            <h3>${escapeHTML(item.title)}</h3>
+            <span>${escapeHTML(item.from || "")}</span>
+            ${item.note ? `<p>${escapeHTML(item.note)}</p>` : ""}
+          </div>
+        </article>
+      `;
+    }).join("");
+  }
+
+  /* ---------- Playlist ---------- */
+
+  const spotifyEmbed = document.getElementById("spotifyEmbed");
+  const spotifyLink = document.getElementById("spotifyLink");
+
+  spotifyEmbed.src = `https://open.spotify.com/embed/playlist/${CONFIG.spotifyPlaylistId}?theme=0`;
+  spotifyLink.href = `https://open.spotify.com/playlist/${CONFIG.spotifyPlaylistId}`;
+
+  /* ---------- Mobile menu ---------- */
+
+  const mobileMenu = document.getElementById("mobileMenu");
+  const menuOpen = document.getElementById("menuOpen");
+  const menuClose = document.getElementById("menuClose");
+
+  function closeMenu() {
+    mobileMenu.classList.remove("open");
+    mobileMenu.setAttribute("aria-hidden", "true");
+    document.body.classList.remove("menu-open");
+  }
+
+  menuOpen?.addEventListener("click", () => {
+    mobileMenu.classList.add("open");
+    mobileMenu.setAttribute("aria-hidden", "false");
+    document.body.classList.add("menu-open");
+  });
+
+  menuClose?.addEventListener("click", closeMenu);
+  document.querySelectorAll(".mobile-menu a").forEach(link => link.addEventListener("click", closeMenu));
+
+  /* ---------- Active navigation ---------- */
+
+  const navLinks = [...document.querySelectorAll(".nav a")];
+
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (!entry.isIntersecting) return;
+      navLinks.forEach(link => {
+        link.classList.toggle("active", link.getAttribute("href") === "#" + entry.target.id);
+      });
+    });
+  }, { rootMargin: "-25% 0px -65% 0px" });
+
+  document.querySelectorAll("main section[id]").forEach(section => observer.observe(section));
+
+  /* ---------- Lightbox ---------- */
+
+  const lightbox = document.getElementById("lightbox");
+  const lightboxImage = document.getElementById("lightboxImage");
+  const lightboxClose = document.getElementById("lightboxClose");
+
+  galleryGrid.addEventListener("click", event => {
+    const item = event.target.closest(".gallery-item");
+    if (!item || !item.dataset.image) return;
+
+    lightboxImage.src = item.dataset.image;
+    lightboxImage.alt = item.dataset.caption || "Photograph";
+    lightbox.classList.add("open");
+    lightbox.setAttribute("aria-hidden", "false");
+    document.body.classList.add("menu-open");
+  });
+
+  function closeLightbox() {
+    lightbox.classList.remove("open");
+    lightbox.setAttribute("aria-hidden", "true");
+    lightboxImage.src = "";
+    document.body.classList.remove("menu-open");
+  }
+
+  lightboxClose.addEventListener("click", closeLightbox);
+  lightbox.addEventListener("click", event => { if (event.target === lightbox) closeLightbox(); });
+
+  document.addEventListener("keydown", event => {
+    if (event.key === "Escape") { closeLightbox(); closeMenu(); }
+  });
+
+  /* ---------- Wishes ---------- */
+
+  const wishesGrid = document.getElementById("wishesGrid");
+  const wishFormLink = document.getElementById("wishFormLink");
+
+  if (CONFIG.googleFormUrl) {
+    wishFormLink.href = CONFIG.googleFormUrl;
+  } else {
+    wishFormLink.style.display = "none";
+  }
+
+  function parseCSV(text) {
+    const rows = [];
+    let row = [], field = "", quoted = false;
+
+    for (let i = 0; i < text.length; i++) {
+      const char = text[i];
+
+      if (quoted) {
+        if (char === '"' && text[i + 1] === '"') { field += '"'; i++; }
+        else if (char === '"') { quoted = false; }
+        else { field += char; }
+      } else if (char === '"') { quoted = true; }
+      else if (char === ",") { row.push(field); field = ""; }
+      else if (char === "\n") { row.push(field); rows.push(row); row = []; field = ""; }
+      else if (char !== "\r") { field += char; }
+    }
+
+    if (field.length || row.length) { row.push(field); rows.push(row); }
+    return rows.filter(entry => entry.some(cell => cell.trim()));
+  }
+
+  function wishesFromCSV(text) {
+    const rows = parseCSV(text);
+    if (rows.length < 2) return [];
+
+    const headers = rows[0].map(header => header.toLowerCase());
+    const nameIndex = headers.findIndex(header => header.includes("name"));
+    const wishIndex = headers.findIndex(header =>
+      header.includes("wish") || header.includes("message") || header.includes("note"));
+
+    return rows.slice(1).map(row => ({
+      name: (row[nameIndex] || "").trim(),
+      wish: (row[wishIndex >= 0 ? wishIndex : row.length - 1] || "").trim()
+    })).filter(entry => entry.wish);
+  }
+
+  function renderWishes(list) {
+    if (!list.length) {
+      wishesGrid.innerHTML = '<div class="wish-status">No wishes yet. Be the first to leave one.</div>';
+      return;
+    }
+
+    wishesGrid.innerHTML = list.map(wish => `
+      <article class="wish">
+        <p class="wish-message">${escapeHTML(wish.wish)}</p>
+        <span class="wish-name">${escapeHTML(wish.name || "Someone who loves you")}</span>
+      </article>
+    `).join("");
+  }
+
+  async function loadWishes() {
+    try {
+      if (CONFIG.wishesSheetCsvUrl) {
+        const response = await fetch(CONFIG.wishesSheetCsvUrl);
+        if (!response.ok) throw new Error("Sheet unavailable");
+        renderWishes(wishesFromCSV(await response.text()));
+        return;
+      }
+
+      if (CONFIG.wishesApi) {
+        const response = await fetch(CONFIG.wishesApi, { headers: { Accept: "application/json" } });
+        if (!response.ok) throw new Error("API unavailable");
+        const data = await response.json();
+        renderWishes(Array.isArray(data) ? data : (data.wishes || []));
+        return;
+      }
+
+      wishesGrid.innerHTML =
+        '<div class="wish-status">Wishes will appear here once the form is connected.</div>';
+    } catch (error) {
+      console.error(error);
+      wishesGrid.innerHTML =
+        '<div class="wish-status">Wishes will appear here once the form is connected.</div>';
+    }
+  }
+
+  loadWishes();
+  </script>
+</body>
+</html>
