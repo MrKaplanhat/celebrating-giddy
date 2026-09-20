@@ -1012,9 +1012,10 @@
     // Pull photos straight from these shared Drive folders — no need to list
     // individual file IDs. Requires a free Google API key (see below).
     driveApiKey: "AIzaSyAbPgfNzRzko2wJzVcY4qOrhZsC6kOzJfw",
-    driveHeroFolderId: "1HDmX7NZ8gBOTazrDMYqg6fpm4_VaSg3U",      // one photo — the first (by filename) is used
-    driveGalleryFolderId: "1pbrnvgWdV-HcXvoq256MN693C5tTvbof",   // every photo in this folder, looped into the gallery
-    driveMemoriesFolderId: "1eybIMcVrR8i2-Mb7gwK2Q7lUIIMgliVb",  // first 3 photos (by filename) go to the 3 memory cards below
+    driveHeroFolderId: "1bWPoZEKRZ6ERUt-ExGmufEAfYWVSUek8",      // one photo — the first (by filename) is used
+    driveGalleryFolderId: "1jzen3GUyWCkVOSItUqOzua0jqPs-Gbvo",   // every photo in this folder, looped into the gallery
+    driveMemoriesFolderId: "1_7odPQTvAwYz1BT6aqd3VN3oI0WHektC",  // first 3 photos (by filename) go to the 3 memory cards below
+    driveVideosFolderId: "1ymXApjxzO_yRTZpXJgowRid9BoVxXD0y",    // every video in this folder becomes a video card
 
     // HOW TO GET driveApiKey (5 minutes, free, one-time):
     //  1. Go to console.cloud.google.com and create a project (any name).
@@ -1115,13 +1116,15 @@
     { image: "", caption: "Another little moment",   size: "normal" }
   ];
 
+  // Manual fallback only — used if driveVideosFolderId above has no key or
+  // comes back empty. With the videos folder wired up, this can stay as-is.
   const VIDEOS = [
     {
       title: "A message for you",
       from: "From someone who loves you",
       note: "A little message, saved here for you.",
-      video: "PASTE_VIDEO_DRIVE_ID_HERE",   // the Drive file ID you have — swap this in
-      poster: ""   // optional still image for local videos
+      video: "PASTE_VIDEO_DRIVE_ID_HERE",
+      poster: ""
     }
   ];
 
@@ -1205,10 +1208,10 @@
   // is configured) replace these once they've loaded.
   renderGallery(GALLERY.filter(item => item.image));
 
-  /* ---------- Drive folder loading (hero, gallery, memories) ---------- */
+  /* ---------- Drive folder loading (hero, gallery, memories, videos) ---------- */
 
-  async function listDriveImages(folderId) {
-    const q = encodeURIComponent(`'${folderId}' in parents and mimeType contains 'image/' and trashed = false`);
+  async function listDriveFiles(folderId, mimePrefix) {
+    const q = encodeURIComponent(`'${folderId}' in parents and mimeType contains '${mimePrefix}/' and trashed = false`);
     const url = `https://www.googleapis.com/drive/v3/files?q=${q}&orderBy=name&pageSize=200&fields=files(id,name)&key=${CONFIG.driveApiKey}`;
     const response = await fetch(url);
     if (!response.ok) throw new Error(`Drive API responded ${response.status}`);
@@ -1216,10 +1219,15 @@
     return data.files || [];
   }
 
+  // filenames become card labels, e.g. "From Shin.mp4" -> "From Shin"
+  function nameFromFile(file) {
+    return file.name.replace(/\.[^.]+$/, "").replace(/[_-]+/g, " ").trim();
+  }
+
   async function loadHeroFromDrive() {
     if (CONFIG.heroImage || !CONFIG.driveHeroFolderId || !CONFIG.driveApiKey) return;
     try {
-      const files = await listDriveImages(CONFIG.driveHeroFolderId);
+      const files = await listDriveFiles(CONFIG.driveHeroFolderId, "image");
       if (!files.length) return;
       heroImage.src = imageUrl(files[0].id);
       heroImage.style.display = "";
@@ -1231,7 +1239,7 @@
   async function loadGalleryFromDrive() {
     if (!CONFIG.driveGalleryFolderId || !CONFIG.driveApiKey) return;
     try {
-      const files = await listDriveImages(CONFIG.driveGalleryFolderId);
+      const files = await listDriveFiles(CONFIG.driveGalleryFolderId, "image");
       if (!files.length) return;
       renderGallery(files.map((file, i) => ({
         image: file.id,
@@ -1247,11 +1255,28 @@
   async function loadMemoriesFromDrive() {
     if (!CONFIG.driveMemoriesFolderId || !CONFIG.driveApiKey) return;
     try {
-      const files = await listDriveImages(CONFIG.driveMemoriesFolderId);
+      const files = await listDriveFiles(CONFIG.driveMemoriesFolderId, "image");
       if (!files.length) return;
       renderMemories(MEMORIES.map((item, i) => files[i] ? { ...item, image: files[i].id } : item));
     } catch (error) {
       console.warn("Couldn't load memory photos from Drive:", error);
+    }
+  }
+
+  async function loadVideosFromDrive() {
+    if (!CONFIG.driveVideosFolderId || !CONFIG.driveApiKey) return;
+    try {
+      const files = await listDriveFiles(CONFIG.driveVideosFolderId, "video");
+      if (!files.length) return;
+      renderVideos(files.map(file => ({
+        title: "A message for you",
+        from: nameFromFile(file),
+        note: "",
+        video: file.id
+      })));
+    } catch (error) {
+      console.warn("Couldn't load videos from Drive:", error);
+      // Falls back silently to the manually-listed VIDEOS array below.
     }
   }
 
@@ -1262,12 +1287,14 @@
   /* ---------- Videos ---------- */
 
   const videoGrid = document.getElementById("videoGrid");
-  const withVideo = VIDEOS.filter(item => item.video);
 
-  if (!withVideo.length) {
-    videoGrid.innerHTML = '<div class="wish-status">Video messages will appear here.</div>';
-  } else {
-    videoGrid.innerHTML = withVideo.map(item => {
+  function renderVideos(items) {
+    if (!items.length) {
+      videoGrid.innerHTML = '<div class="wish-status">Video messages will appear here.</div>';
+      return;
+    }
+
+    videoGrid.innerHTML = items.map(item => {
       const frame = isPath(item.video)
         ? `<video controls preload="metadata"${item.poster ? ` poster="${imageUrl(item.poster)}"` : ""}>
              <source src="${item.video}" type="video/mp4">
@@ -1287,6 +1314,9 @@
       `;
     }).join("");
   }
+
+  renderVideos(VIDEOS.filter(item => item.video && item.video !== "PASTE_VIDEO_DRIVE_ID_HERE"));
+  loadVideosFromDrive();
 
   /* ---------- Playlist ---------- */
 
