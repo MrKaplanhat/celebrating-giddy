@@ -1007,37 +1007,100 @@
     age: "",                 // e.g. "24" — leave "" to hide the age
     year: "2026",            // shown in the footer
 
-    heroImage: "",           // Drive file ID or assets/images/hero.jpg
+    heroImage: "",           // Drive file ID or assets/images/hero.jpg — leave blank to auto-use the first photo in driveHeroFolderId
+
+    // Pull photos straight from these shared Drive folders — no need to list
+    // individual file IDs. Requires a free Google API key (see below).
+    driveApiKey: "AIzaSyAbPgfNzRzko2wJzVcY4qOrhZsC6kOzJfw",
+    driveHeroFolderId: "1HDmX7NZ8gBOTazrDMYqg6fpm4_VaSg3U",      // one photo — the first (by filename) is used
+    driveGalleryFolderId: "1pbrnvgWdV-HcXvoq256MN693C5tTvbof",   // every photo in this folder, looped into the gallery
+    driveMemoriesFolderId: "1eybIMcVrR8i2-Mb7gwK2Q7lUIIMgliVb",  // first 3 photos (by filename) go to the 3 memory cards below
+
+    // HOW TO GET driveApiKey (5 minutes, free, one-time):
+    //  1. Go to console.cloud.google.com and create a project (any name).
+    //  2. Left menu > APIs & Services > Library > search "Google Drive API" > Enable.
+    //  3. APIs & Services > Credentials > + Create Credentials > API key.
+    //  4. Click the new key > Restrict key > API restrictions > Google Drive API only.
+    //     (Optional but safer: under Application restrictions, add your site's domain.)
+    //  5. Copy the key into driveApiKey above.
+    //  6. Make sure all three folders are shared as "Anyone with the link – Viewer".
+    // Until a key is added, the GALLERY list further down is used instead,
+    // and the hero/memory photos are simply left blank.
 
     spotifyPlaylistId: "6qvlgTSNWmaBeNx7PBFWj3",
 
     googleFormUrl: "",       // link people use to leave a wish
 
-    // Easiest way to show wishes, no server needed:
-    // Google Form > Responses > open in Sheets >
-    // File > Share > Publish to web > choose the sheet > CSV > copy the link.
+    // Optional: once the form is live, publish its response sheet to the web
+    // (Google Form > Responses > Sheets icon > File > Share > Publish to web
+    // > choose the sheet > CSV) and paste that link here. New wishes then
+    // load live. Until then, the WISHES list below (already collected) is
+    // shown as-is.
     wishesSheetCsvUrl: "",
 
     wishesApi: ""            // optional: /api/wishes if you deploy a backend instead
   };
 
+  // Wishes already collected — shown immediately, no live link required.
+  // If wishesSheetCsvUrl above is set, live responses are used instead of this list.
+  const WISHES = 
+[
+    {
+        "name": "Dolapo",
+        "wish": "Happy Birthday Korede🥹\nLook how far we’ve come!!!\nThank you for being such a constant support to me for over a decade now.\nMy constant supplier of good music 😅\nYou’re always showing up, always supporting me and my family and I’m so grateful to have you as my friend.\nThank you for all the times you saved gists for me and waited till we see so we could talk about all of it😂\nOmoo you don dey old oooo\nBut I’m thankful for your life!!\nThis new year, you begin to see all your heart has always dreamed of and desired.\n\nI love you so much\nMy family loves you so much\nHappy Birthday My Friend ❤️"
+    },
+    {
+        "name": "BigdaddyW",
+        "wish": "There's a rational fear some people have when interacting with old friends after a hiatus (brief or longer).Awkward silences, odd gestures and utterances to fill the air expelling crippling silence. (See as I dey cook dawg👨🏾‍🍳)\n\nHere is where I am going with this.....\nI have known you for too long and we have been through infinite experiences which have battered us, blended us and aged us like red wine, through it all though Gido is still Gido. Thank you for being the Silly, whimsical, witty, steadfast stellar negro of a man. You dey motivate me OnG and I'm glad to jave you on my side. Your ancestors and Mr Raphael will be proud of the man you are. Have a good one brother."
+    },
+    {
+        "name": "Toluwanimi",
+        "wish": "Happy birthday Unc\nLife begins at 30 they say but only you would know that😂😂😉.\n\nHappy Giddy, thanks for always ensuring that we get the full music experience, bringing the right words to our we feel when discussing, always available to listen to out rants and hold us accountable to our words. This new year bring more laughter, blessings, love, happiness and every good thing life has to offer. God bless you and he will keep lifting you higher.\n\nHappy birthday Giddy(30+ unc)\n🎂🎊🥳🎉"
+    },
+    {
+        "name": "Baby Cakes",
+        "wish": "Happy birthday my babyyyyyyy.\nI’m so so proud of you. I’m very proud of how far you’ve come this year.\nI know that this year might not have been the best so far, but I’m glad that you’re still going, you’re still pushing, and not giving up.\nI’ve said almost all the prayers in my head atp, lol\n\nI hope you enjoy your day \nHave a blast 🥳\n\nI love youuuuu 🥺❤️"
+    },
+    {
+        "name": "Nkere-Awaji",
+        "wish": "“That we are alive is reason enough to give thanks, for we know that there were lives once lived that are no more”.\n\nHappy birthday Hermano, wishing you a year filled with joy, favour, and immeasurable blessings.\n\nCheers to many more tales yet to be told… \n\nGod bless ❤️❤️❤️"
+    },
+    {
+        "name": "Omobolaji or MO for short 🤭",
+        "wish": "Happiest birthday to my sister’s Tums 💃🏾🥳\nYour new age is truly blessed 🙏🏾\nMay this new year bring you peace, joy, money and all of the good things you desire in Jesus mighty name. \nYou will continue to live long and prosper in good health and wealth in Jesus mighty name. Amen!"
+    },
+    {
+        "name": "Shin",
+        "wish": "Happy birthday to my most unhinged friend. \n\nI love how you’re very smart and really foolish at the same time. You have been nothing short of an amazing person for almost a decade and half of us being friends. You’re a smart, Witty, funny, foolish, intelligent, cheerful & solid person and friend.\n\nAs you turn almost 30 this year, I pray you achieve everything you desire. May God bless you abundantly and keep you safe. \n\nCheers to a better and fruitful year boo. I love you scatter 🫶🏽."
+    },
+    {
+        "name": "3eeze",
+        "wish": "Bruhh, you know I'm not good at these things but your babe wan put me for talk still I think its a good opportunity to tell you how amazing you are.\n\nwe've gone from friends to family you're closer to me than my brothers, you've pretty much become my 4th brother and thats not by chance, it's because of how solid you've been through the years, how you keep it 💯 all the time, how you check me when I slack.\n\nAnd I'm not saying all this for nothing, I mean it from my heart. Whatever you're going through, I pray God cover you and bless you in ways you've never even asked for. This year, is your year. I pray that this year would be better than all the other years combined, I pray for open doors, alerts, peace of mind, everything you need.\n\nAnd I need you to hear this one well: no matter how heavy things feel right now, you go dey alright. You've carried worse before and you came out stronger, this one wont be any different. Just hold on, keep your head up, e go better.\n\nHappy birthday my guy, I love you and I'm grateful God gave me a brother like you. 🎂🙏🏾"
+    },
+    {
+        "name": "Phanie",
+        "wish": "Happy birthday old man!!!!👴🏾 Thank you so much for loving my friend and being an amazing person💫🥳"
+    }
+];
+
+
   const MEMORIES = [
     {
-      date: "01.01.2024",
-      title: "The beginning",
-      text: "Write the story here. A few lines is plenty.",
+      date: "THEN",
+      title: "Where it started",
+      text: "However it began — we're glad it did.",
       image: ""
     },
     {
-      date: "14.06.2024",
-      title: "Somewhere along the way",
-      text: "The little moments usually become the ones we remember.",
+      date: "SINCE",
+      title: "Everything in between",
+      text: "All the ordinary days that turned out to be the good ones.",
       image: ""
     },
     {
-      date: "22.12.2024",
-      title: "Another chapter",
-      text: "A story, a place, a person, or simply a really good day.",
+      date: "NOW",
+      title: "Today",
+      text: "Another year. Still worth celebrating.",
       image: ""
     }
   ];
@@ -1057,7 +1120,7 @@
       title: "A message for you",
       from: "From someone who loves you",
       note: "A little message, saved here for you.",
-      video: "",   // Drive file ID, or assets/videos/message-01.mp4
+      video: "PASTE_VIDEO_DRIVE_ID_HERE",   // the Drive file ID you have — swap this in
       poster: ""   // optional still image for local videos
     }
   ];
@@ -1103,31 +1166,98 @@
 
   /* ---------- Memories ---------- */
 
-  document.getElementById("memoryList").innerHTML = MEMORIES.map(item => `
-    <article class="memory">
-      <div class="memory-date">${escapeHTML(item.date)}</div>
-      <div>
-        <h3>${escapeHTML(item.title)}</h3>
-        <p>${escapeHTML(item.text)}</p>
-      </div>
-      ${item.image
-        ? `<img src="${imageUrl(item.image)}" alt="${escapeHTML(item.title)}" loading="lazy" referrerpolicy="no-referrer">`
-        : `<span></span>`}
-    </article>
-  `).join("");
+  const memoryList = document.getElementById("memoryList");
+
+  function renderMemories(items) {
+    memoryList.innerHTML = items.map(item => `
+      <article class="memory">
+        <div class="memory-date">${escapeHTML(item.date)}</div>
+        <div>
+          <h3>${escapeHTML(item.title)}</h3>
+          <p>${escapeHTML(item.text)}</p>
+        </div>
+        ${item.image
+          ? `<img src="${imageUrl(item.image)}" alt="${escapeHTML(item.title)}" loading="lazy" referrerpolicy="no-referrer">`
+          : `<span></span>`}
+      </article>
+    `).join("");
+  }
+
+  renderMemories(MEMORIES);
 
   /* ---------- Gallery ---------- */
 
   const galleryGrid = document.getElementById("galleryGrid");
+  const gallerySizes = ["large", "normal", "tall", "normal", "wide", "normal", "tall", "normal"];
 
-  galleryGrid.innerHTML = GALLERY.filter(item => item.image).map(item => `
-    <button class="gallery-item ${escapeHTML(item.size || "normal")}" type="button"
-            data-image="${imageUrl(item.image)}"
-            data-caption="${escapeHTML(item.caption || "")}">
-      <img src="${imageUrl(item.image)}" alt="${escapeHTML(item.caption || "Photograph")}" loading="lazy" referrerpolicy="no-referrer">
-      <span class="gallery-caption">${escapeHTML(item.caption || "")}</span>
-    </button>
-  `).join("");
+  function renderGallery(items) {
+    galleryGrid.innerHTML = items.map(item => `
+      <button class="gallery-item ${escapeHTML(item.size || "normal")}" type="button"
+              data-image="${imageUrl(item.image)}"
+              data-caption="${escapeHTML(item.caption || "")}">
+        <img src="${imageUrl(item.image)}" alt="${escapeHTML(item.caption || "Photograph")}" loading="lazy" referrerpolicy="no-referrer">
+        <span class="gallery-caption">${escapeHTML(item.caption || "")}</span>
+      </button>
+    `).join("");
+  }
+
+  // Show whatever is manually listed immediately; Drive folders (if a key
+  // is configured) replace these once they've loaded.
+  renderGallery(GALLERY.filter(item => item.image));
+
+  /* ---------- Drive folder loading (hero, gallery, memories) ---------- */
+
+  async function listDriveImages(folderId) {
+    const q = encodeURIComponent(`'${folderId}' in parents and mimeType contains 'image/' and trashed = false`);
+    const url = `https://www.googleapis.com/drive/v3/files?q=${q}&orderBy=name&pageSize=200&fields=files(id,name)&key=${CONFIG.driveApiKey}`;
+    const response = await fetch(url);
+    if (!response.ok) throw new Error(`Drive API responded ${response.status}`);
+    const data = await response.json();
+    return data.files || [];
+  }
+
+  async function loadHeroFromDrive() {
+    if (CONFIG.heroImage || !CONFIG.driveHeroFolderId || !CONFIG.driveApiKey) return;
+    try {
+      const files = await listDriveImages(CONFIG.driveHeroFolderId);
+      if (!files.length) return;
+      heroImage.src = imageUrl(files[0].id);
+      heroImage.style.display = "";
+    } catch (error) {
+      console.warn("Couldn't load the hero photo from Drive:", error);
+    }
+  }
+
+  async function loadGalleryFromDrive() {
+    if (!CONFIG.driveGalleryFolderId || !CONFIG.driveApiKey) return;
+    try {
+      const files = await listDriveImages(CONFIG.driveGalleryFolderId);
+      if (!files.length) return;
+      renderGallery(files.map((file, i) => ({
+        image: file.id,
+        caption: "",
+        size: gallerySizes[i % gallerySizes.length]
+      })));
+    } catch (error) {
+      console.warn("Couldn't load the gallery folder from Drive:", error);
+      // Falls back silently to the manually-listed GALLERY photos above.
+    }
+  }
+
+  async function loadMemoriesFromDrive() {
+    if (!CONFIG.driveMemoriesFolderId || !CONFIG.driveApiKey) return;
+    try {
+      const files = await listDriveImages(CONFIG.driveMemoriesFolderId);
+      if (!files.length) return;
+      renderMemories(MEMORIES.map((item, i) => files[i] ? { ...item, image: files[i].id } : item));
+    } catch (error) {
+      console.warn("Couldn't load memory photos from Drive:", error);
+    }
+  }
+
+  loadHeroFromDrive();
+  loadGalleryFromDrive();
+  loadMemoriesFromDrive();
 
   /* ---------- Videos ---------- */
 
@@ -1311,12 +1441,13 @@
         return;
       }
 
-      wishesGrid.innerHTML =
-        '<div class="wish-status">Wishes will appear here once the form is connected.</div>';
+      // No live link configured yet — show the wishes already collected.
+      renderWishes(WISHES);
     } catch (error) {
       console.error(error);
-      wishesGrid.innerHTML =
-        '<div class="wish-status">Wishes will appear here once the form is connected.</div>';
+      // A live link was configured but failed — fall back to the saved list
+      // rather than showing nothing.
+      renderWishes(WISHES);
     }
   }
 
